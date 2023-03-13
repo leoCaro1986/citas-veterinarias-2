@@ -1,17 +1,45 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import Error from "./Error";
 
-const Formulario = () => {
+const Formulario = ({ pacientes, setPacientes }) => {
   const [nombre, setNombre] = useState("");
   const [propietario, setPropietario] = useState("");
   const [email, setEmail] = useState("");
   const [fecha, setFecha] = useState("");
   const [sintomas, setSintomas] = useState("");
 
+  const [error, setError] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Enviando Frmulario")
+    //Validaciones formulario
+    if ([nombre, propietario, email, fecha, sintomas].includes("")){
+      console.log("Todos los campos son requeridos")
+
+      setError(true)
+      return;
+    }
+    setError(false) 
+
+    const objetoPaciente = {
+      nombre, 
+      propietario, 
+      email, 
+      fecha, 
+      sintomas
+    }
+
+    setPacientes([...pacientes, objetoPaciente])
+
+    //Reiniciar formulario
+    setNombre("")
+    setPropietario("")
+    setEmail("")
+    setFecha("")
+    setSintomas("")
   }
+
 
 
   return (
@@ -27,7 +55,7 @@ const Formulario = () => {
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
       >
-        
+        {error && <Error mensaje="Todos los campos son requeridos" />}
         <div className="mb-5">
           <label htmlFor="mascota" className="block text-gray-700 uppercase font-bold">
             Nombre de la Mascota
